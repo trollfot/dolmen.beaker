@@ -10,7 +10,9 @@
   <include package="zope.principalregistry" file="meta.zcml" />
 
   <!-- Dependencies -->
-  <include package="dolmen.beaker" file="configure.zcml" />
+  <include package="zope.security" />
+  <include package="zope.publisher" />
+  <include package="dolmen.beaker" />
 
 
   <!-- Security -->

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import grokcore.component as grok
-from dolmen.beaker.interfaces import ISession
+from dolmen.beaker.interfaces import ISessionConfig
 
 
 class ImmutableDict(dict):
@@ -32,4 +32,4 @@ DEFAUT_CONFIG = ImmutableDict(
     )
 
 
-grok.global_utility(DEFAUT_CONFIG, provides=ISession, direct=True)
+grok.global_utility(DEFAUT_CONFIG, provides=ISessionConfig, direct=True)
