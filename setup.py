@@ -17,6 +17,7 @@ install_requires = [
     'zope.schema',
     'zope.site',
     'zope.traversing',
+    'pycryptopp',
     ]
 
 test_requires = [

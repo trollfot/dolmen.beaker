@@ -22,13 +22,14 @@ class ImmutableDict(dict):
 
 
 DEFAUT_CONFIG = ImmutableDict(
-    invalidate_corrupt=True,
-    type=None, 
     data_dir=None,
-    key='beaker.session.id', 
-    timeout=None,
-    secret=None,
+    invalidate_corrupt=True,
+    key='beaker.session.id',
     log_file=None,
+    secret="DolmenRocks",
+    timeout=600,
+    type="cookie",
+    validate_key="thisCouldBeChanged",
     )
 
 

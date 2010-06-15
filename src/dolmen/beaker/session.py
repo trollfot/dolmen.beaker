@@ -8,21 +8,74 @@ from zope.component import queryUtility
 from zope.interface import Interface
 from zope.publisher.browser import TestRequest
 from zope.publisher.interfaces import IEndRequestEvent
-from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.site.interfaces import IRootFolder
 from zope.traversing.interfaces import IBeforeTraverseEvent
+from zope.session.interfaces import ISession as IZopeSession
 
 
 @grok.adapter(IHTTPRequest)
 @grok.implementer(ISession)
-def ZopeSession(request):
+def BeakerSession(request):
     """Adapter factory from a Zope request to a beaker session
     """
     session = request._environ.get(ENVIRON_KEY, None)
     if session is not None:
         return session
     return initializeSession(request)
+
+
+class NamespaceSession(object):
+    """A session, prefixing keys with a namespace
+    """
+    def __init__(self, session, namespace):
+        self.session = session
+        self.namespace = namespace
+
+    def __getitem__(self, name):
+        return self.session.__getitem__(
+            "%s.%s" % (self.namespace, name))
+
+    def get(self, name, default=None):
+        if name in self:
+            return self.__getitem__(name)
+        return default
+
+    def __setitem__(self, name, value):
+        self.session["%s.%s" % (self.namespace, name)] = value
+        self.session.save()
+
+    def __contains__(self, name):
+        return "%s.%s" % (self.namespace, name) in self.session
+
+    def __delitem__(self, name):
+        self.session.__delitem__("%s.%s" % (self.namespace, name))
+        self.session.save()
+
+    def setdefault(self, name, default=None):
+        if name not in self:
+            self.__setitem__(name, default)
+        return self.__getitem__(name)
+
+
+class ZopeSession(grok.Adapter):
+    grok.context(IHTTPRequest)
+    grok.provides(IZopeSession)
+
+    def __init__(self, request):
+        self.request = request
+        self.session = ISession(request)
+        if self.session is None:
+            raise NotImplementedError
+
+    def __getitem__(self, namespace):
+        return NamespaceSession(self.session, namespace)
+
+    def get(self, namespace, default=None):
+        return NamespaceSession(self.session, namespace)
+
+    def delete(self):
+        self.session.delete()
 
 
 def initializeSession(request, environ_key=ENVIRON_KEY):
