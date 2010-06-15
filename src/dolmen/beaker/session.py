@@ -59,7 +59,8 @@ def configureSessionOnStart(obj, event):
     initializeSession(event.request)
 
 
-@grok.subscribe(Interface, IHTTPRequest, IEndRequestEvent)
-def persistSessionOnFailure(ob, event):
+@grok.subscribe(IEndRequestEvent)
+def persistSession(event):
+    print "PERSISTING"
     closeSession(event.request)
 

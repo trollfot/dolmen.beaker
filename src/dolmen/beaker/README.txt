@@ -51,7 +51,7 @@ Let's assign an value to our session and save it?
    'bar'
 
    >>> from zope.publisher.interfaces import EndRequestEvent
-   >>> notify(EndRequestEvent(ob, request)) # This Event does not get called !!!
+   >>> notify(EndRequestEvent(ob, request))
    >>> from dolmen.beaker.session import closeSession
    >>> closeSession(request)
 
@@ -68,5 +68,4 @@ Let's assign an value to our session and save it?
 
    >>> newrequest.response._cookies = cookie
    >>> session = ISession(newrequest)
-   >>> import pdb; pdb.set_trace() 
    >>> session['foo']
