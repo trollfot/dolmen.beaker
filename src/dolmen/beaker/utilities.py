@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import grokcore.component as grok
-from dolmen.beaker import ISession
+from dolmen.beaker.interfaces import ISession
 
 
 class ImmutableDict(dict):
