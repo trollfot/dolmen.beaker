@@ -5,13 +5,13 @@ import grokcore.component as grok
 from beaker.session import SessionObject
 from dolmen.beaker.interfaces import ISession, ISessionConfig, ENVIRON_KEY
 from zope.component import queryUtility
+from zope.interface import Interface
+from zope.publisher.browser import TestRequest
 from zope.publisher.interfaces import IEndRequestEvent
+from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.site.interfaces import IRootFolder
 from zope.traversing.interfaces import IBeforeTraverseEvent
-from zope.interface import Interface
-from zope.publisher.interfaces.browser import IBrowserRequest
-from zope.publisher.browser import TestRequest
 
 
 @grok.adapter(IHTTPRequest)
@@ -20,20 +20,20 @@ def ZopeSession(request):
     """Adapter factory from a Zope request to a beaker session
     """
     session = request._environ.get(ENVIRON_KEY, None)
-    if not session:
-        session = initializeSession(request)
-    return session
+    if session is not None:
+        return session
+    return initializeSession(request)
 
 
-def initializeSession(request, environ_key='beaker.session'):
+def initializeSession(request, environ_key=ENVIRON_KEY):
     """Create a new session and store it in the request.
     """
     options = queryUtility(ISessionConfig)
-    session = None
     if options is not None:
         session = SessionObject(request, **options)
-        request._environ[ENVIRON_KEY] = session
-    return session    
+        request._environ[environ_key] = session
+        return session
+    return None
 
 
 def closeSession(request):
@@ -54,13 +54,11 @@ def closeSession(request):
                     request.response.setCookie(key, value, **args)
 
 
-@grok.subscribe(Interface, IBeforeTraverseEvent)
-def configureSessionOnStart(obj, event):
+@grok.subscribe(IRootFolder, IBeforeTraverseEvent)
+def configureSession(obj, event):
     initializeSession(event.request)
 
 
 @grok.subscribe(IEndRequestEvent)
 def persistSession(event):
-    print "PERSISTING"
     closeSession(event.request)
-

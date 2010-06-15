@@ -28,13 +28,10 @@ First we create an instance of the Request
 
 We initalize our Session with the help of the BeforeTraverseEvent.
 This event will make an instance of a Session Object in the Request.
-
-   >>> ob = grok.Context() 
-   >>> from zope.interface import Interface
-   >>> Interface.providedBy(ob)
-   True 
-
-   >>> notify(BeforeTraverseEvent(ob, request))
+  
+   >>> from zope.component.hooks import getSite
+   >>> site = getSite()
+   >>> notify(BeforeTraverseEvent(site, request))
 
 Do we get our BeakerSession Object?
 
@@ -51,13 +48,14 @@ Let's assign an value to our session and save it?
    'bar'
 
    >>> from zope.publisher.interfaces import EndRequestEvent
-   >>> notify(EndRequestEvent(ob, request))
-   >>> from dolmen.beaker.session import closeSession
-   >>> closeSession(request)
+   >>> notify(EndRequestEvent(site, request))
 
    >>> cookie = request.response._cookies 
    >>> cookie
    {'beaker.session.id': {'path': '/', 'value': '...'}}
+
+
+A new request will not have access to the session without traversing::
 
    >>> newrequest = TestRequest()
    >>> newrequest.response._cookies
@@ -65,7 +63,6 @@ Let's assign an value to our session and save it?
 
    >>> session = ISession(newrequest)
    >>> session['foo']
-
-   >>> newrequest.response._cookies = cookie
-   >>> session = ISession(newrequest)
-   >>> session['foo']
+   Traceback (most recent call last):
+   ...
+   KeyError: 'foo'
