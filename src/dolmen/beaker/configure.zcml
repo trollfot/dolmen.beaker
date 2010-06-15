@@ -6,6 +6,6 @@
   <!-- Dependencies -->
   <include package="grokcore.component" file="meta.zcml"/>
 
-  <grok:grok package=".session" />
+  <grok:grok package="." />
 
 </configure>

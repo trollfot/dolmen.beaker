@@ -19,16 +19,21 @@ from zope.publisher.browser import TestRequest
 def ZopeSession(request):
     """Adapter factory from a Zope request to a beaker session
     """
-    return request
+    session = request._environ.get(ENVIRON_KEY, None)
+    if not session:
+        session = initializeSession(request)
+    return session
 
 
 def initializeSession(request, environ_key='beaker.session'):
     """Create a new session and store it in the request.
     """
     options = queryUtility(ISessionConfig)
+    session = None
     if options is not None:
-        session = SessionObject(request.environ, **options)
-        request.environ[ENVIRON_KEY] = session
+        session = SessionObject(request, **options)
+        request._environ[ENVIRON_KEY] = session
+    return session    
 
 
 def closeSession(request):
@@ -42,22 +47,19 @@ def closeSession(request):
             if sessionInstructions.get('set_cookie', False):
                 if sessionInstructions['cookie_out']:
                     cookieObj = session.cookie[session.key]
-                    
                     key = cookieObj.key
                     value = session.cookie.value_encode(cookieObj.value)[1]
-                    
                     args = dict([(k,v) for k,v in cookieObj.items() if v])
                     args.setdefault('path', session._path)
-                    
                     request.response.setCookie(key, value, **args)
 
 
 @grok.subscribe(Interface, IBeforeTraverseEvent)
-def configureSessionOnStart(event):
+def configureSessionOnStart(obj, event):
     initializeSession(event.request)
 
 
-@grok.subscribe(Interface, IEndRequestEvent)
-def persistSessionOnFailure(event):
+@grok.subscribe(Interface, IHTTPRequest, IEndRequestEvent)
+def persistSessionOnFailure(ob, event):
     closeSession(event.request)
 
