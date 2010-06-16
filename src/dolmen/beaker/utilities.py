@@ -12,7 +12,7 @@ class ImmutableDict(dict):
     def __setitem__(self, key, value):
         raise NotImplementedError(
             'This dict cannot be altered through direct assignation')
-        
+
     def __hash__(self):
         items = self.items()
         res = hash(items[0])
@@ -29,8 +29,7 @@ DEFAUT_CONFIG = ImmutableDict(
     secret="DolmenRocks",
     timeout=600,
     type="cookie",
-    validate_key="thisCouldBeChanged",
-    )
+    validate_key="thisCouldBeChanged")
 
 
 grok.global_utility(DEFAUT_CONFIG, provides=ISessionConfig, direct=True)

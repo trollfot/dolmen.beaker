@@ -5,13 +5,12 @@ import grokcore.component as grok
 from beaker.session import SessionObject
 from dolmen.beaker.interfaces import ISession, ISessionConfig, ENVIRON_KEY
 from zope.component import queryUtility
-from zope.interface import Interface
-from zope.publisher.browser import TestRequest
 from zope.publisher.interfaces import IEndRequestEvent
 from zope.publisher.interfaces.http import IHTTPRequest
+from zope.session.interfaces import ISession as IZopeSession, ISessionData
 from zope.site.interfaces import IRootFolder
 from zope.traversing.interfaces import IBeforeTraverseEvent
-from zope.session.interfaces import ISession as IZopeSession
+from zope.schema.fieldproperty import FieldProperty
 
 
 @grok.adapter(IHTTPRequest)
@@ -25,12 +24,22 @@ def BeakerSession(request):
     return initializeSession(request)
 
 
-class NamespaceSession(object):
+class NamespaceSessionData(object):
     """A session, prefixing keys with a namespace
     """
+    grok.implements(ISessionData)
+
+    lastAccessTime = FieldProperty(ISessionData['lastAccessTime'])
+    
     def __init__(self, session, namespace):
         self.session = session
         self.namespace = namespace
+
+    def getLastAccessTime(self):
+        return self.lastAccessTime
+
+    def setLastAccessTime(self):
+        raise NotImplementedError
 
     def __getitem__(self, name):
         return self.session.__getitem__(
@@ -60,7 +69,7 @@ class NamespaceSession(object):
 
 class ZopeSession(grok.Adapter):
     grok.context(IHTTPRequest)
-    grok.provides(IZopeSession)
+    grok.implements(IZopeSession)
 
     def __init__(self, request):
         self.request = request
@@ -68,11 +77,20 @@ class ZopeSession(grok.Adapter):
         if self.session is None:
             raise NotImplementedError
 
+    def keys(self):
+        return self.session.keys()
+
+    def items(self):
+        return self.session.items()
+
+    def values(self):
+        return self.session.values()
+
     def __getitem__(self, namespace):
-        return NamespaceSession(self.session, namespace)
+        return NamespaceSessionData(self.session, namespace)
 
     def get(self, namespace, default=None):
-        return NamespaceSession(self.session, namespace)
+        return NamespaceSessionData(self.session, namespace)
 
     def delete(self):
         self.session.delete()
@@ -102,7 +120,7 @@ def closeSession(request):
                     cookieObj = session.cookie[session.key]
                     key = cookieObj.key
                     value = session.cookie.value_encode(cookieObj.value)[1]
-                    args = dict([(k,v) for k,v in cookieObj.items() if v])
+                    args = dict([(k, v) for k, v in cookieObj.items() if v])
                     args.setdefault('path', session._path)
                     request.response.setCookie(key, value, **args)
 

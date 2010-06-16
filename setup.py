@@ -8,20 +8,22 @@ history = open(join('docs', 'HISTORY.txt')).read()
 
 
 install_requires = [
-    'grokcore.component',
-    'setuptools',
     'beaker',
-    'zope.publisher',
+    'grokcore.component',
+    'pycryptopp',
+    'setuptools',
     'zope.component',
     'zope.interface',
+    'zope.publisher',
     'zope.schema',
+    'zope.session',
     'zope.site',
     'zope.traversing',
-    'pycryptopp',
     ]
 
 test_requires = [
     'zope.component',
+    'zope.event',
     'zope.i18n',
     'zope.principalregistry',
     'zope.security',
