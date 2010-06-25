@@ -45,6 +45,11 @@ def test_suite():
         '../README.txt', globs={'__name__': 'dolmen.beaker.tests'},
         optionflags=(doctest.ELLIPSIS + doctest.NORMALIZE_WHITESPACE))
     readme.layer = DolmenBeakerLayer(tests)
+    cache = doctest.DocFileSuite(
+        '../cache.txt', globs={'__name__': 'dolmen.beaker.tests'},
+        optionflags=(doctest.ELLIPSIS + doctest.NORMALIZE_WHITESPACE))
+    cache.layer = DolmenBeakerLayer(tests)
     suite.addTest(readme)
+    suite.addTest(cache)
     return suite
 

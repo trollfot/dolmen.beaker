@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from zope.interface.common.mapping import IMapping
+from zope.interface import Interface
 from zope import schema
 
 
@@ -38,4 +39,8 @@ class ISessionConfig(IMapping):
     """Beaker session setting, registered as a utility.
     These settings are looked up to configure a session. This allows a local
     utility to override settings if required.
+    """
+
+class ICacheManager(Interface):
+    """
     """

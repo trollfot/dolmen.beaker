@@ -28,6 +28,7 @@ DEFAUT_CONFIG = ImmutableDict(
     log_file=None,
     secret="DolmenRocks",
     timeout=600,
+    expire='3',
     type="cookie",
     validate_key="thisCouldBeChanged")
 
