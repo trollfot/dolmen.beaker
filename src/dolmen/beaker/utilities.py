@@ -19,18 +19,3 @@ class ImmutableDict(dict):
         for item in items[1:]:
             res ^= hash(item)
         return res
-
-
-DEFAUT_CONFIG = ImmutableDict(
-    data_dir=None,
-    invalidate_corrupt=True,
-    key='beaker.session.id',
-    log_file=None,
-    secret="DolmenRocks",
-    timeout=600,
-    expire='3',
-    type="cookie",
-    validate_key="thisCouldBeChanged")
-
-
-grok.global_utility(DEFAUT_CONFIG, provides=ISessionConfig, direct=True)

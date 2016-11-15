@@ -2,26 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import grokcore.component as grok
-from beaker.session import SessionObject
-from dolmen.beaker.interfaces import ISession, ISessionConfig, ENVIRON_KEY
+from dolmen.beaker.interfaces import ISession
 from zope.component import queryUtility
 from zope.publisher.interfaces import IEndRequestEvent
-from zope.publisher.interfaces.http import IHTTPRequest
 from zope.session.interfaces import ISession as IZopeSession, ISessionData
 from zope.site.interfaces import IRootFolder
 from zope.traversing.interfaces import IBeforeTraverseEvent
 from zope.schema.fieldproperty import FieldProperty
-
-
-@grok.adapter(IHTTPRequest)
-@grok.implementer(ISession)
-def BeakerSession(request):
-    """Adapter factory from a Zope request to a beaker session
-    """
-    session = request._environ.get(ENVIRON_KEY, None)
-    if session is not None:
-        return session
-    return initializeSession(request)
+from zope.publisher.interfaces.http import IHTTPRequest
 
 
 class NamespaceSessionData(object):
@@ -96,17 +84,6 @@ class ZopeSession(grok.Adapter):
         self.session.delete()
 
 
-def initializeSession(request, environ_key=ENVIRON_KEY):
-    """Create a new session and store it in the request.
-    """
-    options = queryUtility(ISessionConfig)
-    if options is not None:
-        session = SessionObject(request, **options)
-        request._environ[environ_key] = session
-        return session
-    return None
-
-
 def closeSession(request):
     """Close the session, and, if necessary, set any required cookies
     """
@@ -123,11 +100,6 @@ def closeSession(request):
                     args = dict([(k, v) for k, v in cookieObj.items() if v])
                     args.setdefault('path', session._path)
                     request.response.setCookie(key, value, **args)
-
-
-@grok.subscribe(IRootFolder, IBeforeTraverseEvent)
-def configureSession(obj, event):
-    initializeSession(event.request)
 
 
 @grok.subscribe(IEndRequestEvent)

@@ -5,9 +5,6 @@ from zope.interface import Interface
 from zope import schema
 
 
-ENVIRON_KEY = 'beaker.session'
-
-
 class ISession(IMapping):
     """Adapt the request to ISession to obtain a Beaker session. This
     interface describes the basic Beaker session type.
@@ -40,6 +37,7 @@ class ISessionConfig(IMapping):
     These settings are looked up to configure a session. This allows a local
     utility to override settings if required.
     """
+
 
 class ICacheManager(Interface):
     """
