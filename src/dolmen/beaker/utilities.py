@@ -1,10 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-import grokcore.component as grok
-from dolmen.beaker.interfaces import ISessionConfig
-
-
 class ImmutableDict(dict):
     """A dict that can be updated only through the `update` or
     `setdefault` methods.

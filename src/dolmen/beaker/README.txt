@@ -80,13 +80,13 @@ closure and invalidation
 
    >>> cookie = request.response._cookies 
    >>> cookie
-   {'beaker.session.id': {'path': '/', 'value': '...'}}
+   {'beaker.session.id': {'path': '/', 'samesite': 'Lax', 'value': '...'}}
 
 Invalidating
 ------------
 
    >>> session = ISession(request)
-   >>> print session['foo']
+   >>> print(session['foo'])
    bar
    >>> session.invalidate() # Or destroy, to get rid of everything
    >>> session['foo']
@@ -94,7 +94,7 @@ Invalidating
    ...
    KeyError: 'foo'
 
-   >>> print session
+   >>> print(session)
    {'_id': '...'}
 
 
@@ -107,7 +107,7 @@ The Zope Session adapter
    >>> notify(BeforeTraverseEvent(site, request))
 
    >>> zsession = IZopeSession(request)
-   >>> print zsession
+   >>> print(zsession)
    <dolmen.beaker.session.ZopeSession object at ...>
 
    >>> from zope.interface.verify import verifyObject
@@ -115,18 +115,19 @@ The Zope Session adapter
    True
 
    >>> data = zsession['my_package']
-   >>> print data
+   >>> print(data)
    <dolmen.beaker.session.NamespaceSessionData object at ...>
 
    >>> data['someitem'] = 'test'
-   >>> print data['someitem']
+   >>> print(data['someitem'])
    test
 
-   >>> print zsession.keys()
-   ['my_package.someitem', '_id']
+   >>> set(zsession.keys()) == {'my_package.someitem', '_id'}
+   True
 
    >>> data = zsession['some.other.package']
    >>> data['info'] = 'Grok !'
 
-   >>> print zsession.keys()
-   ['my_package.someitem', '_id', 'some.other.package.info']
+   >>> set(zsession.keys()) == {
+   ...     'my_package.someitem', 'some.other.package.info', '_id'}
+   True

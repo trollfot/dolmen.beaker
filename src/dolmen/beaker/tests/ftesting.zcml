@@ -1,6 +1,7 @@
 <configure
-   xmlns="http://namespaces.zope.org/zope"
-   xmlns:grok="http://namespaces.zope.org/grok">
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:grok="http://namespaces.zope.org/grok">
 
   <!-- meta files -->
   <include package="zope.component" file="meta.zcml" />
@@ -10,7 +11,6 @@
   <include package="zope.principalregistry" file="meta.zcml" />
 
   <!-- Dependencies -->
-
   <include package="zope.security" />
   <include package="zope.publisher" />
   <include package="dolmen.beaker" />
@@ -35,5 +35,11 @@
       />
 
   <grantAll principal="zope.manager" />
+
+
+  <!-- session -->
+  <browser:beakerSession
+      secret="Test"
+      validate_key="Some key" />
 
 </configure>

@@ -25,8 +25,14 @@ Cache...
    >>> from beaker.cache import CacheManager
    >>> from dolmen.beaker.cache import setupCache
    >>> cache_config = setupCache()
-   >>> cache_config
-   {'enabled': True, 'data_dir': None, 'log_file': None, 'type': 'memory', 'expire': None}
+
+   >>> assert cache_config == {
+   ...     'enabled': True,
+   ...     'data_dir': None,
+   ...     'log_file': None,
+   ...     'type': 'memory',
+   ...     'expire': None
+   ... }
 
 Now we can configure a ICacheManager utility for our site
 

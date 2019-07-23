@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from os.path import join
 
 name = 'dolmen.beaker'
-version = '0.1'
+version = '0.2dev0'
 readme = open(join('src', 'dolmen', 'beaker', 'README.txt')).read()
 history = open(join('docs', 'HISTORY.txt')).read()
 
@@ -10,7 +10,6 @@ history = open(join('docs', 'HISTORY.txt')).read()
 install_requires = [
     'beaker',
     'grokcore.component',
-    'pycryptopp',
     'setuptools',
     'zope.component',
     'zope.interface',
@@ -22,6 +21,7 @@ install_requires = [
     ]
 
 test_requires = [
+    'hamcrest',
     'zope.component',
     'zope.event',
     'zope.i18n',

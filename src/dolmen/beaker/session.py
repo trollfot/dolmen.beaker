@@ -10,12 +10,13 @@ from zope.site.interfaces import IRootFolder
 from zope.traversing.interfaces import IBeforeTraverseEvent
 from zope.schema.fieldproperty import FieldProperty
 from zope.publisher.interfaces.http import IHTTPRequest
+from zope.interface import implementer
 
 
-class NamespaceSessionData(object):
+@implementer(ISessionData)
+class NamespaceSessionData:
     """A session, prefixing keys with a namespace
     """
-    grok.implements(ISessionData)
 
     lastAccessTime = FieldProperty(ISessionData['lastAccessTime'])
     
@@ -55,9 +56,9 @@ class NamespaceSessionData(object):
         return self.__getitem__(name)
 
 
+@implementer(IZopeSession)
 class ZopeSession(grok.Adapter):
     grok.context(IHTTPRequest)
-    grok.implements(IZopeSession)
 
     def __init__(self, request):
         self.request = request

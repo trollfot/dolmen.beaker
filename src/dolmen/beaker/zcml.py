@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from .interfaces import ISession, ISessionConfig
 from .utilities import ImmutableDict
 

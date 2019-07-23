@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from zope.interface.common.mapping import IMapping
 from zope.interface import Interface
 from zope import schema

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import doctest
 import unittest
 import zope.component
 
@@ -10,7 +11,6 @@ from zope.component.testlayer import ZCMLFileLayer
 from zope.interface import Interface
 from zope.site.folder import rootFolder
 from zope.site.site import LocalSiteManager, SiteManagerAdapter
-from zope.testing import doctest
 from zope.traversing.testing import setUp as traversingSetUp
 
 
