@@ -19,7 +19,7 @@ class NamespaceSessionData:
     """
 
     lastAccessTime = FieldProperty(ISessionData['lastAccessTime'])
-    
+
     def __init__(self, session, namespace):
         self.session = session
         self.namespace = namespace
@@ -99,7 +99,7 @@ def closeSession(request):
                     key = cookieObj.key
                     value = session.cookie.value_encode(cookieObj.value)[1]
                     args = dict([(k, v) for k, v in cookieObj.items() if v])
-                    args.setdefault('path', session._path)
+                    args.setdefault('path', session['_path'])
                     request.response.setCookie(key, value, **args)
 
 

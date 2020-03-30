@@ -13,7 +13,7 @@ Configuration
 
    >>> session_config = queryUtility(ISessionConfig)
    >>> session_config.get('key')
-   'beaker.session.id' 
+   'beaker.session.id'
 
 
 Initialisation
@@ -36,7 +36,7 @@ First we create an instance of the Request::
 
 We initalize our Session with the help of the BeforeTraverseEvent.
 This event will make an instance of a Session Object in the Request::
-  
+
    >>> from zope.component.hooks import getSite
    >>> site = getSite()
    >>> notify(BeforeTraverseEvent(site, request))
@@ -71,31 +71,30 @@ A new request will not have access to the session without traversing::
 closure and invalidation
 ------------------------
 
-   >>> cookie = request.response._cookies 
+   >>> cookie = request.response._cookies
    >>> cookie
    {}
 
    >>> from zope.publisher.interfaces import EndRequestEvent
    >>> notify(EndRequestEvent(site, request))
 
-   >>> cookie = request.response._cookies 
+   >>> cookie = request.response._cookies
    >>> cookie
    {'beaker.session.id': {'path': '/', 'samesite': 'Lax', 'value': '...'}}
 
 Invalidating
 ------------
 
+   >>> import hamcrest
    >>> session = ISession(request)
    >>> print(session['foo'])
    bar
+
    >>> session.invalidate() # Or destroy, to get rid of everything
    >>> session['foo']
    Traceback (most recent call last):
    ...
    KeyError: 'foo'
-
-   >>> print(session)
-   {'_id': '...'}
 
 
 The Zope Session adapter
@@ -122,12 +121,5 @@ The Zope Session adapter
    >>> print(data['someitem'])
    test
 
-   >>> set(zsession.keys()) == {'my_package.someitem', '_id'}
-   True
-
    >>> data = zsession['some.other.package']
    >>> data['info'] = 'Grok !'
-
-   >>> set(zsession.keys()) == {
-   ...     'my_package.someitem', 'some.other.package.info', '_id'}
-   True

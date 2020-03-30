@@ -21,7 +21,7 @@ install_requires = [
     ]
 
 test_requires = [
-    'hamcrest',
+    'pyhamcrest',
     'zope.component',
     'zope.event',
     'zope.i18n',
