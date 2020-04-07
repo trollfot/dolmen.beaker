@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0dev (unreleased)
--------------------
+0.3 (2020-04-07)
+----------------
 
-- Initial release
+- Corrected deprecated import and package structure.

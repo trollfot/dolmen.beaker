@@ -6,9 +6,9 @@ import zope.component
 
 from dolmen.beaker import tests
 from zope.component import eventtesting
-from zope.component.interfaces import IComponentLookup
 from zope.component.testlayer import ZCMLFileLayer
 from zope.interface import Interface
+from zope.interface.interfaces import IComponentLookup
 from zope.site.folder import rootFolder
 from zope.site.site import LocalSiteManager, SiteManagerAdapter
 from zope.traversing.testing import setUp as traversingSetUp
@@ -52,4 +52,3 @@ def test_suite():
     suite.addTest(readme)
     suite.addTest(cache)
     return suite
-

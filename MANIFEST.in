@@ -1,3 +1,2 @@
 recursive-include src *.py *.txt
 recursive-include docs *.txt
-include README.txt
