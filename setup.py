@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from os.path import join
 
 name = 'dolmen.beaker'
-version = '0.4'
+version = '0.5dev0'
 readme = open(join('src', 'dolmen', 'beaker', 'README.txt')).read()
 history = open(join('docs', 'HISTORY.txt')).read()
 
